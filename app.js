@@ -18,18 +18,25 @@ app.get('/match', function (req, res) {
 
     console.log("Test")
     matchs.orderByKey().once("value", valueToMap => {
-        valueToMap = valueToMap.toJSON();
-        res.send(valueToMap);
+        try {
+            valueToMap = valueToMap.toJSON();
+            res.send(valueToMap);
+          } catch (e) {
+            res.status(400).send('Errou');
+          }
+        // valueToMap = valueToMap.toJSON();
+        // res.send(valueToMap);
 
     })
 })
 
-app.get(['/match', '/:key'], function (req, res) {
+app.get(['/', '/:key'], function (req, res) {
 
     console.log("test")
     let key = req.params.key;
     matchs.child(key).once("value", valueToMap => {
         valueToMap = valueToMap.toJSON();
+        console.log(valueToMap)
         res.send(valueToMap)
 
     })
