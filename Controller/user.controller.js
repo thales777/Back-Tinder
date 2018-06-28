@@ -1,4 +1,6 @@
 var user = require('../server').user
+var expressValidator = require('express-validator');
+
 
 exports.getAll = (req, res, next) => {
 
@@ -9,69 +11,40 @@ exports.getAll = (req, res, next) => {
     })
 }
 
-exports.getAcessoByKey = (req,res,next) => {
+exports.index = (req, res, next) => {
 
-    let key = req.params.key;
-    user.child(key).child("acesso").on('value', function(snapshot){
-        res.json(snapshot.val());
-      });
-};
+    res.render('index.html')
 
-exports.getByKey = (req, res, next) => {
-
-    let key = req.params.key;
-    user.child(key).once("value", valueToMap => {
-        res.json(valueToMap)    
-    })
 }
 
-exports.post = (req, res, next) => {
+exports.post = (req, res) => {
+    
+    req.checkBody('username', 'Username cannot is Empty').notEmpty();
 
-    var body = req.body;
-    if (body) {
+    const err = req.validationErrors();
 
-
-        var keyTemp = user.push().key;
-
+    if(err){
+        console.log("errou")
+        res.render('index.html')
+    } else {
         
+        const username = req.body.username;
+        const password = req.body.password;
+        
+
+        var keyTemp = user.push().key;   
 
         user.push(
             {
                 key: keyTemp,
-                nome: body.nome,
-                acesso: body.acesso,
+                username: username,
+                password: password,
+                //acesso: body.acesso
             }
-        );
-
-        res.send(body);
-
-    } else {
-        res.send(err);
+        );        
+        res.send(req.body);
     }
-
-}
-
-exports.put = (req, res, next) => {
-
-    let key = req.params.key;
-    var body = req.body;
-    if (body) {
-
-        var keyTemp = user.push().key;
-        user.child(key).set(
-            {
-                key: keyTemp,
-                nome: body.nome,
-                acesso: body.acesso,
-            }
-        );
-
-        res.send(body);
-
-    } else {
-        res.send("ERROR" + relacao)
-    }
-
+        
 }
 
 exports.delete = (req, res) => {

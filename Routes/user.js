@@ -5,15 +5,12 @@ const router = express.Router();
 const controller = require('../Controller/user.controller');
 
 
+
 router.get('/', controller.getAll);
 
-router.get('/:key', controller.getByKey); 
+router.get('/index', controller.index);
 
-router.get('/acesso/:key', controller.getAcessoByKey);
-
-router.post('/', controller.post);
-
-router.put('/:key', controller.put);
+router.post('/index', controller.post);
 
 router.delete('/:key', controller.delete);
 
