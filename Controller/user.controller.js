@@ -12,9 +12,7 @@ exports.getAll = (req, res, next) => {
 exports.getAcessoByKey = (req,res,next) => {
 
     let key = req.params.key;
-    console.log("alguma cosia")
     user.child(key).child("acesso").on('value', function(snapshot){
-        console.log("PQ")
         res.json(snapshot.val());
       });
 };
@@ -22,7 +20,6 @@ exports.getAcessoByKey = (req,res,next) => {
 exports.getByKey = (req, res, next) => {
 
     let key = req.params.key;
-    console.log("hey")
     user.child(key).once("value", valueToMap => {
         res.json(valueToMap)    
     })
