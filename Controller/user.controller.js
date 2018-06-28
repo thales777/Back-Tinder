@@ -1,22 +1,30 @@
-var matchs = require('../server').matchs
-var router = require('../Routes/user')
+var user = require('../server').user
 
 exports.getAll = (req, res, next) => {
 
-    matchs.orderByKey().once("value", valueToMap => {
+    user.orderByKey().once("value", valueToMap => {
 
         res.json(valueToMap);
 
     })
 }
 
+exports.getAcessoByKey = (req,res,next) => {
+
+    let key = req.params.key;
+    console.log("alguma cosia")
+    user.child(key).child("acesso").on('value', function(snapshot){
+        console.log("PQ")
+        res.json(snapshot.val());
+      });
+};
+
 exports.getByKey = (req, res, next) => {
 
     let key = req.params.key;
     console.log("hey")
-    matchs.child(key).once("value", valueToMap => {
-        res.json(valueToMap)
-    
+    user.child(key).once("value", valueToMap => {
+        res.json(valueToMap)    
     })
 }
 
@@ -26,20 +34,17 @@ exports.post = (req, res, next) => {
     if (body) {
 
 
-        var keyTemp = matchs.push().key;
+        var keyTemp = user.push().key;
 
         
 
-        matchs.push(
+        user.push(
             {
                 key: keyTemp,
-                keyOrigem: body.keyOrigem,
-                keyDestino: body.keyDestino,
-                status: body.status,
+                nome: body.nome,
+                acesso: body.acesso,
             }
         );
-
-        status = matchs.child("status")
 
         res.send(body);
 
@@ -55,13 +60,12 @@ exports.put = (req, res, next) => {
     var body = req.body;
     if (body) {
 
-        var keyTemp = matchs.push().key;
-        matchs.child(key).set(
+        var keyTemp = user.push().key;
+        user.child(key).set(
             {
                 key: keyTemp,
-                keyOrigem: body.keyOrigem,
-                keyDestino: body.keyDestino,
-                status: body.status,
+                nome: body.nome,
+                acesso: body.acesso,
             }
         );
 
@@ -76,7 +80,7 @@ exports.put = (req, res, next) => {
 exports.delete = (req, res) => {
 
     let key = req.params.key;
-    matchs.child(key).remove();
+    user.child(key).remove();
     res.send("Ok")
 
 }

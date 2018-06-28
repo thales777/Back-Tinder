@@ -2,12 +2,14 @@ var express = require('express')
 
 const router = express.Router();
 
-const controller = require('../Controller/matchs.controller');
+const controller = require('../Controller/user.controller');
 
 
 router.get('/', controller.getAll);
 
-router.get('/:key', controller.getByKey);   
+router.get('/:key', controller.getByKey); 
+
+router.get('/acesso/:key', controller.getAcessoByKey);
 
 router.post('/', controller.post);
 
