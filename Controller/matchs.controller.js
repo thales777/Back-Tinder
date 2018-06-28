@@ -1,5 +1,4 @@
 var matchs = require('../server').matchs
-var router = require('../Routes/user')
 
 exports.getAll = (req, res, next) => {
 
