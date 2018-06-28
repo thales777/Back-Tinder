@@ -1,4 +1,5 @@
 var user = require('../server').user
+var auth = require('../server').auth
 
 //Hash Senha
 var bcrypt = require('bcrypt')
@@ -21,12 +22,10 @@ exports.index = (req, res, next) => {
 
 exports.post = (req, res) => {
     
-    req.checkBody('username', 'Username não pode ser vazio').notEmpty();
-    req.checkBody('username', 'Username precisa ter entre 4 a 10 caracteres').len(4,10);
-    req.checkBody('password', 'Senha precisa ter entre 6 a 10 caracteres').len(6,10);
-    req.checkBody('password', 'Senha não pode ser vazio').notEmpty();
     req.checkBody('email', 'Email não pode ser vazio').notEmpty();
     req.checkBody('email', 'Email tem que ser valido').isEmail();
+    req.checkBody('password', 'Senha não pode ser vazio').notEmpty();
+    req.checkBody('password', 'Senha precisa ter entre 6 a 10 caracteres').len(6,10);
 
     const err = req.validationErrors();
 
@@ -35,21 +34,22 @@ exports.post = (req, res) => {
         res.render('index.html')
     } else {
         
-        const username = req.body.username;
-        const password = req.body.password;
         const email = req.body.email;
+        const password = req.body.password;
         
         var keyTemp = user.push().key;   
 
         bcrypt.hash(password, saltRounds, function(err, hash) {
+            
             user.push(
                 {
                     key: keyTemp,
-                    username: username,
                     email: email,
                     password: hash,
                 }
             );  
+            auth.createUserWithEmailAndPassword(email, password).catch(e => console.log(e.message));
+
         })       
         res.send(req.body);
     }

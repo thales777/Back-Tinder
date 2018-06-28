@@ -6,5 +6,6 @@ var firebase = require('firebase');
 var appFirebase = firebase.initializeApp(config);
 var database = appFirebase.database();
 
+exports.auth = firebase.auth();
 exports.matchs = database.ref('match');
 exports.user = database.ref('user')

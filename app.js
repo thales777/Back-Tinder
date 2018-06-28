@@ -8,6 +8,8 @@ var expressValidator = require('express-validator');
 //Html config
 var engine = require('consolidate');
 
+//Auth
+
 app.set('views', __dirname + '/views');
 app.engine('html', engine.mustache);
 app.set('view engine', 'html');
